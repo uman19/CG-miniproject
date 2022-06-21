@@ -5,11 +5,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <GL/glut.h>
+#include<windows.h>
 
 /***defining constants***/
 
 #define PI 3.14159 //PI=
-#define MINUTE_HAND_LENGTH 70.0 //constant length of minute hand
+#define MINUTE_HAND_LENGTH 65.0 //constant length of minute hand
 #define SECOND_HAND_LENGTH 75.0 //constant length of minute hand
 #define CLOCK_RADIUS 80.0 //constant radius of stopwatch
 
@@ -21,12 +22,14 @@ typedef struct Point {
 
 double secondAngle = 0 , minuteAngle = 0 ; //initializing angles of both minute and second hand to 0, i.e., both hands are at 00:00
 
-float bg=1.0; //initializing background color value
+float bgr=1.0; //initializing background color value
+float bgg=1.0; //initializing background color value
+float bgb=1.0; //initializing background color value
 
 /***applying background color, initializing display-viewing area***/
 
 void init(void) {
-	glClearColor(bg,bg,bg,1.0); //clears buffer values and fills background color with 'bg' value
+	glClearColor(bgr,bgg,bgb,1.0); //clears buffer values and fills background color with 'bg' value
 	gluOrtho2D(-100 , 100 , -100 , 100); //sets up 2D orthographic viewing region
     glMatrixMode(GL_PROJECTION); //applies subsequent matrix operation to the projection matrix stack
     glLoadIdentity(); //replace the current matrix with identity matrix
@@ -74,7 +77,7 @@ void drawMarks(void) {
 		p.y = ep.y*cos(i); //y coordinate of point
 		//dividing points to be drawn into 12 - 5 point parts 1st point is drawn with bigger point size
 		if(count%5==0) {
-			glPointSize(7.0); //1st point in every part is drawn with bigger point size
+			glPointSize(5.0); //1st point in every part is drawn with bigger point size
 			drawPoint(p);
 
 		}
@@ -86,21 +89,37 @@ void drawMarks(void) {
 	}
 }
 
+/***print name***/
+
+void name(){
+    const char *s="STOPWATCH";
+    int i=strlen(s);//getting length of string
+    glColor3f(0.0 , 0.0 , 1.0);//color of string
+	glRasterPos2f(-20 , 90);//position of beginning of string
+	for(int j=0 ; j<i ; ++j) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24 , s[j]);//print individual character of string onto the screen
+	}
+}
+
+
 /***main display function, which display position of all hands and marks on stopwatch***/
 
 void drawClock(void) {
+
 	glClear(GL_COLOR_BUFFER_BIT); //clears the buffer currently enabled for writing
-	glColor3f(1.0 , 0.0 , 0.0); //red is give to draw marks
+	glColor3f(0.8, 0.1 , 0.3); //color is give to draw marks
 	drawMarks();
 
+    name();
+
 	glLineWidth(3.0); //width of minute hand
-	glColor3f(0.0f, 1.0f, 1.0f); //cyan color for minute hand
+	glColor3f(0.8f, 0.4f, 0.9f); //color for minute hand
 	glBegin(GL_LINES);
 		drawLine(0.0 , MINUTE_HAND_LENGTH , -minuteAngle+PI/2); //drawing minute hand
 	glEnd();
 
 	glLineWidth(1.0); //width of second hand
-	glColor3f(0.0f, 0.0f, 1.0f); //blue color for minute hand
+	glColor3f(1.0f, 0.0f, 0.0f); //color for second hand
 	glBegin(GL_LINES);
 	    drawLine(0.0 , SECOND_HAND_LENGTH , -secondAngle+PI/2); //drawing second hand
 	glEnd();
@@ -138,18 +157,45 @@ int cflag=0; //initializing a flag to change background color
 
 void changecolor(){
     if(cflag==0){
-        bg=1.0;
-        glClearColor(bg,bg,bg,1.0); //set background to white
+        bgr=1.0;
+        bgg=1.0;
+        bgb=1.0;
+        glClearColor(bgr,bgg,bgb,1.0); //set background
         cflag=1;
     }
     else if(cflag==1){
-        bg=0.0;
-        glClearColor(bg,bg,bg,1.0); //set background to black
+        bgr=0.0;
+        bgg=0.0;
+        bgb=0.0;
+        glClearColor(bgr,bgg,bgb,1.0); //set background
         cflag=2;
     }
     else if(cflag==2){
-        bg=0.3;
-        glClearColor(bg,bg,bg,1.0); //set background to grey
+        bgr=0.8;
+        bgg=1.0;
+        bgb=1.0;
+        glClearColor(bgr,bgg,bgb,1.0); //set background
+        cflag=3;
+    }
+    else if(cflag==3){
+        bgr=0.9;
+        bgg=1.0;
+        bgb=0.9;
+        glClearColor(bgr,bgg,bgb,1.0); //set background
+        cflag=4;
+    }
+    else if(cflag==4){
+        bgr=0.3;
+        bgg=1.0;
+        bgb=0.3;
+        glClearColor(bgr,bgg,bgb,1.0); //set background
+        cflag=5;
+    }
+    else if(cflag==5){
+        bgr=1.0;
+        bgg=1.0;
+        bgb=0.8;
+        glClearColor(bgr,bgg,bgb,1.0); //set background
         cflag=0;
     }
 }
@@ -213,7 +259,6 @@ void keys(unsigned char key, int x, int y){
 /***empty function to display interaction info***/
 
 void menu(int option){
-
 }
 
 /***main driver function***/
