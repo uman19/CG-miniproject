@@ -4,15 +4,15 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <GL/glut.h>
-#include<windows.h>
+#include <GL/glut.h> //
+#include <windows.h>
 
 /***defining constants***/
 
-#define PI 3.14159 //PI=
-#define MINUTE_HAND_LENGTH 65.0 //constant length of minute hand
-#define SECOND_HAND_LENGTH 75.0 //constant length of minute hand
-#define CLOCK_RADIUS 80.0 //constant radius of stopwatch
+#define PI 3.14159 //PI=180°
+#define MINUTE_HAND_LENGTH 55.0 //constant length of minute hand
+#define SECOND_HAND_LENGTH 65.0 //constant length of minute hand
+#define CLOCK_RADIUS 70.0 //constant radius of stopwatch
 
 /***point coordinates***/
 
@@ -98,6 +98,30 @@ void name(){
 	glRasterPos2f(-20 , 90);//position of beginning of string
 	for(int j=0 ; j<i ; ++j) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24 , s[j]);//print individual character of string onto the screen
+	}
+	const char *z="0";
+	const char *f="15";
+	const char *t="30";
+	const char *ff="45";
+	int zi=strlen(z);
+	glRasterPos2f(-2 , 76);//position of beginning of string
+	for(int j=0 ; j<zi ; ++j) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24 , z[j]);//print individual character of string onto the screen
+	}
+	int fi=strlen(f);
+	glRasterPos2f(76 , -2);//position of beginning of string
+	for(int j=0 ; j<fi ; ++j) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24 , f[j]);//print individual character of string onto the screen
+	}
+	int ti=strlen(t);
+	glRasterPos2f(-2 , -78);//position of beginning of string
+	for(int j=0 ; j<ti ; ++j) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24 , t[j]);//print individual character of string onto the screen
+	}
+	int ffi=strlen(ff);
+	glRasterPos2f(-78 , -2);//position of beginning of string
+	for(int j=0 ; j<ffi ; ++j) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24 , ff[j]);//print individual character of string onto the screen
 	}
 }
 
@@ -200,13 +224,6 @@ void changecolor(){
     }
 }
 
-/***function for mouse interaction***/
-
-void mouse(int btn, int state, int x, int y) {
-    //on clicking right mouse button, change background
-    if(btn==GLUT_RIGHT_BUTTON && state==GLUT_DOWN)
-        changecolor();
-}
 
 int sflag=0; //initializing a flag to change state of stopwatch
 
@@ -230,35 +247,63 @@ void redraw(int value) {
     }
 }
 
+/***function to start or stop the stopwatch***/
+
+void startstop(){
+    if(sflag==0){
+        sflag=1;
+        redraw(1);
+    }
+    else{
+        sflag=0;
+        redraw(0);
+    }
+}
+
+/***function to reset stopwatch***/
+
+void reset(){
+    secondAngle=0;
+    minuteAngle=0;
+    sflag=0;
+    redraw(1);
+}
+
+/***function for mouse interaction***/
+
+void mouse(int btn, int state, int x, int y) {
+    //on clicking right mouse button, change background
+    if(btn==GLUT_RIGHT_BUTTON && state==GLUT_DOWN)
+        changecolor();
+}
+
 /***function for keyboard interaction***/
 
 void keys(unsigned char key, int x, int y){
     //s key is used to start and stop the stopwatch
     if(key=='s'){
-        if(sflag==0){
-            sflag=1;
-            redraw(1);
-        }
-        else{
-            sflag=0;
-            redraw(0);
-        }
+        startstop();
     }
     //r key is used to reset the stopwatch
     if(key=='r'){
-        secondAngle=0;
-        minuteAngle=0;
-        sflag=0;
-        redraw(1);
+        reset();
     }
     //q key is used to quit
     if(key=='q')
         exit(0);
 }
 
-/***empty function to display interaction info***/
+/***function to display interaction menu***/
 
 void menu(int option){
+    if(option==1)
+        changecolor();
+    if(option==2)
+        startstop();
+    if(option==3)
+        reset();
+    if(option==4)
+        exit(0);
 }
 
 /***main driver function***/
